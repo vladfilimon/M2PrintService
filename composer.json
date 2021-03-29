@@ -1,5 +1,5 @@
 {
-  "name":         "vladfilimon/m2printservice",
+  "name":         "vladfilimon/M2PrintService",
   "description":  "Print service module for Magento2",
   "keywords":     ["Print"],
   "type":         "magento2-module",
