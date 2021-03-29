@@ -1,15 +1,29 @@
 {
-  "name":         "vladfilimon/M2PrintService",
-  "description":  "Print service module for Magento2",
-  "keywords":     ["Print"],
-  "type":         "magento2-module",
-  "license":      "MIT",
-
-  "require": {
-    "php": ">=7.1",
-    "padrio/php-electrum-api": "*",
-    "endroid/qr-code": "*",
-    "workerman/phpsocket.io": "*",
-    "hashids/hashids": "*"
-  }
+    "name": "vladfilimon/M2PrintService",
+    "description": "Print service module for Magento2",
+    "keywords": [
+        "Print"
+    ],
+    "type": "magento2-module",
+    "version": "2.0.0",
+    "authors": [
+        {
+            "name": "Vlad Filimon",
+            "email": "vlad.filimon@protonmail.com"
+        }
+    ],
+    "license": [
+        "OSL-3.0"
+    ],
+    "require": {
+        "php": "~7.3.0||~7.4.0"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "VladFilimon\\M2PrintService\\": ""
+        }
+    }
 }
