@@ -1,0 +1,15 @@
+{
+  "name":         "vladfilimon/m2printservice",
+  "description":  "Print service module for Magento2",
+  "keywords":     ["Print"],
+  "type":         "magento2-module",
+  "license":      "MIT",
+
+  "require": {
+    "php": ">=7.1",
+    "padrio/php-electrum-api": "*",
+    "endroid/qr-code": "*",
+    "workerman/phpsocket.io": "*",
+    "hashids/hashids": "*"
+  }
+}
