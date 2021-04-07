@@ -2,5 +2,8 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="../../../../../lib/internal/Magento/Framework/Module/etc/module.xsd">
     <module name="VladFilimon_M2PrintService" setup_version="0.0.1">
+        <sequence>
+            <module name="Magento_Ui"/>
+        </sequence>
     </module>
 </config>
