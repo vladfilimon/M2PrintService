@@ -11,6 +11,7 @@ use Magento\Eav\Api\AttributeSetRepositoryInterface;
 use \Magento\Eav\Model\Entity\Attribute\Set;
 use \Magento\Framework\Image\Factory;
 use \Magento\Framework\Module\Dir\Reader;
+use \Magento\Framework\Session\SessionManagerInterface;
 
 class Configure extends \Magento\Framework\App\Action\Action
 {
@@ -24,6 +25,7 @@ class Configure extends \Magento\Framework\App\Action\Action
     protected $_attributeSet;
     protected $_imageFactory;
     protected $_moduleReader;
+    protected $_sessionManager;
 
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
@@ -36,7 +38,8 @@ class Configure extends \Magento\Framework\App\Action\Action
         AttributeSetRepositoryInterface $attributeSetRepository,
         Set $attributeSet,
         Factory $imageFactory,
-        Reader $moduleReader
+        Reader $moduleReader,
+        SessionManagerInterface $sessionManager
     )
     {
         $this->_pageFactory = $pageFactory;
@@ -49,6 +52,7 @@ class Configure extends \Magento\Framework\App\Action\Action
         $this->_attributeSet = $attributeSet;
         $this->_imageFactory = $imageFactory;
         $this->_moduleReader = $moduleReader;
+        $this->_sessionManager = $sessionManager;
 
         parent::__construct($context);
     }
@@ -56,9 +60,28 @@ class Configure extends \Magento\Framework\App\Action\Action
     public function execute()
     {
         if ($this->getRequest()->isPost()) {
+            $this->_sessionManager->start();
+            $this->_sessionManager->setUserCropFile(base64_encode(file_get_contents($this->getRequest()->getFiles('file')['tmp_name'])));
+        }
+    }
+    public function executeOld()
+    {
+        if ($this->getRequest()->isPost()) {
 
             $frameTypeAttr = $this->_productAttributeRepository->get('frame_type');
-            $attributeSet = $this->_attributeSet->load('user_pictures_test','attribute_set_name');
+            $frameAspectCanvas = $this->_productAttributeRepository->get('frame_aspect_canvas');
+            $frameAspectMulticanvas = $this->_productAttributeRepository->get('frame_aspect_multicanvas');
+            $frameDimensionsCanvasRectangle = $this->_productAttributeRepository->get('frame_dimensions_canvas_rectangle');
+            $frameDimensionsCanvasSquare = $this->_productAttributeRepository->get('frame_dimensions_canvas_square');
+            $frameDimensionsCanvasPanorama = $this->_productAttributeRepository->get('frame_dimensions_canvas_panorama');
+            $frameDimensionsMulticanvas3 = $this->_productAttributeRepository->get('frame_dimensions_multicanvas_3');
+            $frameDimensionsMulticanvas5 = $this->_productAttributeRepository->get('frame_dimensions_multicanvas_5');
+            $frameBorder = $this->_productAttributeRepository->get('frame_border');
+
+            $frameDimensionsAttr = $this->_productAttributeRepository->get('frame_dimensions');
+
+
+            $attributeSet = $this->_attributeSet->load('user_canvas_0.85576000 1618991469','attribute_set_name');
 
             srand(microtime(true));
             $product = $this->_productFactory->create();
@@ -67,7 +90,7 @@ class Configure extends \Magento\Framework\App\Action\Action
                 ->setWebsiteIds([1])
                 ->setName('Config Product -'.microtime())
                 ->setSku('config-'.microtime())
-                ->setPrice(50)
+                ->setPrice(50) //@todo remove
                 ->setVisibility(Visibility::VISIBILITY_BOTH)
                 ->setStatus(Status::STATUS_ENABLED)
                 ->setStockData(
@@ -79,7 +102,10 @@ class Configure extends \Magento\Framework\App\Action\Action
                     ]
                 );
 
-            $product->getTypeInstance()->setUsedProductAttributeIds([$frameTypeAttr->getAttributeId()], $product); //attribute ID of attribute 'size_general' in my store
+            $product->getTypeInstance()->setUsedProductAttributeIds([
+                $frameTypeAttr->getAttributeId(),
+                $frameDimensionsAttr->getAttributeId(),
+            ], $product); //attribute ID of attribute 'size_general' in my store
 
             $configurableAttributesData = $product->getTypeInstance()->getConfigurableAttributesAsArray($product);
 
@@ -87,78 +113,124 @@ class Configure extends \Magento\Framework\App\Action\Action
             $product->setConfigurableAttributesData($configurableAttributesData);
             $product->setConfigurableProductsData([]);
 
-
-
-
             $mediaDirectory = $this->_fileSystem->getDirectoryWrite(DirectoryList::MEDIA);
             $baseTmpMediaPath = $this->_mediaConfig->getBaseTmpMediaPath();
             $mediaDirectory->create($baseTmpMediaPath);
-
             $mediaPath = $mediaDirectory->getAbsolutePath($baseTmpMediaPath);
-
             copy($_FILES['image']['tmp_name'], $mediaPath. '/product_image.png');
-            $product->addImageToMediaGallery( $mediaPath. '/product_image.png', array('image', 'small_image', 'thumbnail'), false, false);
+            $product->addImageToMediaGallery( $mediaPath. '/product_image.png', array('image', 'small_image', 'thumbnail'), false, true);
+
             $product->save();
 
-
-
             $associatedProductIds = [];
-
+            $passes = 0;
 
         foreach($frameTypeAttr->getOptions() as $option) {
-            $imageFactory = $this->_imageFactory->create($mediaPath. '/product_image.png');
-            if ($option->getValue()) {
-                $imageFactory->open();
+            if (!$option->getValue()) {
+                continue;
+            }
 
-                //die("OK");
+            if($option->getLabel() == 'Multi-Canvas') {
+                continue;
+            }
+
+            $currentFrameAspectCanvas = $frameAspectCanvas;
+
+
+            foreach ($currentFrameAspectCanvas->getOptions() as $frameAspectCanvasOption) {
+                if (empty(trim($frameAspectCanvasOption->getLabel()))) {
+                    continue;
+                }
+                switch($frameAspectCanvasOption->getLabel()){
+                    case 'Patrat':
+                        $currentFrameDimensions = $frameDimensionsCanvasSquare;
+                        break;
+                    case 'Dreptunghi':
+                        $currentFrameDimensions = $frameDimensionsCanvasRectangle;
+                        break;
+                    case 'Panorama':
+                        $currentFrameDimensions = $frameDimensionsCanvasPanorama;
+                        break;
+                    default:
+                        throw new \Exception("Unknown frame_aspect_canvas option: {$frameAspectCanvasOption->getLabel()}");
+
+                }
+
+                foreach ($currentFrameDimensions->getOptions() as $dimensionOption) {
+                    if ($dimensionOption->getValue() == '') {
+                        continue;
+                    }
+
+                    $passes++;
+                    preg_match('/([0-9]+)\s*x\s*([0-9]+).*/', $dimensionOption->getLabel(), $matches);
+
+
+                    //$imageFactory = $this->_imageFactory->create($mediaPath . '/product_image.png');
+                    //$imageFactory->open();
 
                     $moduleDir = $this->_moduleReader->getModuleDir(
                         \Magento\Framework\Module\Dir::MODULE_VIEW_DIR,
                         'VladFilimon_M2PrintService'
                     );
 
+                    /*
                     $imageFactory->watermark(
-                        $moduleDir.'/frontend/web/images/TEST.png',
+                        $moduleDir . '/frontend/web/images/' . $option->getLabel() .'.png',
                         100,
                         100,
                         80,
                         false
                     );
-                    $imageFactory->setWatermarkWidth(100);
-                    $imageFactory->setWatermarkHeight(100);
-                    $imageFactory->rotate(90);
+                    */
 
-                $imageFactory->setWatermarkPosition('stretch');
-                $imageFactory->setWatermarkImageOpacity(90);
+                    /*
+                    $finalRatio = $matches[1] / $matches[2];
+                    $workingWidth =  $imageFactory->getOriginalWidth() ;
+                    $workingHeight = $imageFactory->getOriginalHeight();
 
-                $imageFactory->save($mediaPath,'product_image_watermark_'.$option->getValue().'.png');
+                    $originalRatio = $imageFactory->getOriginalWidth() / $imageFactory->getOriginalHeight();
 
-                $simpleProduct = $this->_productFactory->create();
+                    if($workingWidth / $workingHeight > $finalRatio) {
+                        $workingWidth = $workingHeight * $finalRatio;
+                    } else {
+                        $workingHeight = $workingWidth / $finalRatio;
+                    }
 
-             //   die("DACA");
-                $simpleProduct->addImageToMediaGallery( $mediaPath.DS.'product_image_watermark_'.$option->getValue().'.png', array('image', 'small_image', 'thumbnail','swatch_image'), false, false);
+                    $imageFactory->keepAspectRatio(false);
+                    $imageFactory->resize($workingWidth, $workingHeight);
+                    $imageFactory->save($mediaPath, 'product_image_watermark_' . $option->getValue() . ' '.$option->getLabel().'.png');
+                    */
+                    foreach ($frameBorder->getOptions() as $frameBorderOption) {
+                        $simpleProduct = $this->_productFactory->create();
+                        //$simpleProduct->addImageToMediaGallery($mediaPath . DS . 'product_image_watermark_' . $option->getValue() . ' '.$option->getLabel().'.png', array('image', 'small_image', 'thumbnail', 'swatch_image'), false, false);
 
-                $simpleProduct->setTypeId('simple')
-                    ->setAttributeSetId($attributeSet->getAttributeSetId())
-                    ->setWebsiteIds([1])
-                    ->setName('Simple Product -' . microtime())
-                    ->setSku('simple-' . microtime())
-                    ->setPrice(50)
-                    ->setVisibility(Visibility::VISIBILITY_IN_CATALOG)
-                    ->setStatus(Status::STATUS_ENABLED)
-                    ->setStockData(
-                        [
-                            'use_config_manage_stock' => 1,
-                            'qty' => 1,
-                            'is_qty_decimal' => 0,
-                            'is_in_stock' => 1,
-                        ]
-                    );
+                        $simpleProduct->setTypeId('simple')
+                            ->setAttributeSetId($attributeSet->getAttributeSetId())
+                            ->setWebsiteIds([1])
+                            ->setName('Simple Product -' . microtime())
+                            ->setSku('simple-' . microtime())
+                            ->setPrice(50)
+                            ->setVisibility(Visibility::VISIBILITY_IN_CATALOG)
+                            ->setStatus(Status::STATUS_ENABLED)
+                            ->setStockData(
+                                [
+                                    'use_config_manage_stock' => 1,
+                                    'qty' => 1,
+                                    'is_qty_decimal' => 0,
+                                    'is_in_stock' => 1,
+                                ]
+                            );
 
-                $simpleProduct->setData('frame_type', $option->getValue());
-                $simpleProduct->save();
-                $associatedProductIds[] = $simpleProduct->getId();
+                        $simpleProduct->setData($frameTypeAttr->getAttributeCode(), $option->getValue());
+                        $simpleProduct->setData($currentFrameAspectCanvas->getAttributeCode(), $frameAspectCanvasOption->getValue());
+                        //$simpleProduct->setData($currentFrameAspectCanvas->getAttributeCode(), $currentFrameAspectCanvas->getValue());
+                        $simpleProduct->setData($currentFrameDimensions->getAttributeCode(), $currentFrameDimensions->getValue());
+                        $simpleProduct->setData($frameBorderOption->getAttributeCode(), $frameBorderOption->getValue());
 
+                        $simpleProduct->save();
+                        $associatedProductIds[] = $simpleProduct->getId();
+                    }
+                }
             }
         }
 

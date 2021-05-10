@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="css/bootstrap.css" />
+        <css src="https://unpkg.com/cropperjs@latest/dist/cropper.css" src_type="url" />
+    </head>
+    <body>
+        <referenceBlock name="breadcrumbs" remove="true"/>
+        <referenceBlock name="product.info.media">
+            <block class="Magento\Framework\View\Element\Template" name="cropmodal" after="-" template="VladFilimon_M2PrintService::cropmodal.phtml">
+            </block>
+
+        </referenceBlock>
+        <referenceContainer name="content">
+        <referenceBlock name="product.info.stock.sku" remove="true" />
+        </referenceContainer>
+    </body>
+</page>

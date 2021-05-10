@@ -4,6 +4,7 @@
     <module name="VladFilimon_M2PrintService" setup_version="0.0.1">
         <sequence>
             <module name="Magento_Ui"/>
+            <module name="Magento_ConfigurableProduct"/>
         </sequence>
     </module>
 </config>
