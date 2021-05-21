@@ -1,0 +1,12 @@
+<script>// <![CDATA[
+    require([
+        'jquery',
+        "domReady!",
+    ], function ($, dr, modal) {
+        $('.swatch-attribute .dimensiune').hide();
+        $('.swatch-attribute .tip').on('change', function (){
+            $('.swatch-attribute .dimensiune').show();
+        });
+    });
+    // ]]>
+</script>

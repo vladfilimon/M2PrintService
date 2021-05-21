@@ -1,0 +1,7 @@
+var config = {
+    map: {
+        "*": {
+            "VladFilimon_M2PrintService": "js/catalog-add-to-cart-mixin.js"
+        }
+    },
+};

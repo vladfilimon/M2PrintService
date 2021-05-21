@@ -1,0 +1,243 @@
+<script>// <![CDATA[
+    require([
+        'jquery',
+        "domReady!",
+        'Magento_Ui/js/modal/modal',
+        'cropperjs',
+        'Magento_Catalog/js/catalog-add-to-cart',
+        'mage/mage',
+    ], function ($, dr, modal, cropperjs,addtocart) {
+        let lastCrop;
+        let canvas;
+        /*
+        let invertCheckox = document.createElement('INPUT');
+        invertCheckox.setAttribute("type", "checkbox");
+        $('.swatch-attribute .dimensiune').parent().append(invertCheckox);*/
+        // Hide cropped configurable option
+        $('#options_5_file-label').parent().hide();
+
+        $('#product_addtocart_form').mage('validation', {
+            radioCheckboxClosest: '.nested',
+            submitHandler: function (form) {
+                var blob;
+               // var dataURL = document.getElementsByClassName('fotorama__img')[0].src;
+                var dataURL = lastCrop.getCroppedCanvas().toDataURL("image/png");
+                var BASE64_MARKER = ';base64,';
+                if (dataURL.indexOf(BASE64_MARKER) == -1) {
+                    var parts = dataURL.split(',');
+                    var contentType = parts[0].split(':')[1];
+                    var raw = parts[1];
+
+                    blob = new Blob([raw], {type: contentType});
+                }
+                else {
+                    var parts = dataURL.split(BASE64_MARKER);
+                    var contentType = parts[0].split(':')[1];
+                    var raw = window.atob(parts[1]);
+                    var rawLength = raw.length;
+
+                    var uInt8Array = new Uint8Array(rawLength);
+
+                    for (var i = 0; i < rawLength; ++i) {
+                        uInt8Array[i] = raw.charCodeAt(i);
+                    }
+
+                    blob = new Blob([uInt8Array], {type: contentType});
+                }
+
+                var formData = new FormData();
+                formData.append('file', blob);
+
+
+                $.ajax({
+                    type: "POST",
+                    url: '/m2printservice/printservice/configure',
+                    data: formData,
+                    async: false,
+                    processData: false,
+                    contentType: false,
+                });
+
+
+                var widget = $(form).catalogAddToCart({
+                    bindSubmit: false
+                });
+
+                widget.catalogAddToCart('submitForm', $(form));
+
+                return false;
+            }
+        });
+
+        var options = {
+            type: 'popup',
+            responsive: true,
+            innerScroll: true,
+            buttons: [{
+                text: $.mage.__('Continue'),
+                class: 'mymodal1',
+                click: function () {
+                    this.closeModal();
+                }
+            }]
+        };
+
+        /*
+        var popup = modal(options, $('#popup-modal'));
+        $("#click-me").on('click',function(){
+            $("#popup-modal").modal("openModal");
+        });
+        */
+
+        let lastFile;
+
+
+        $(document).ready(function() {
+            setTimeout(function () {
+                $('select[class="swatch-select dimensiune"]').change(handleDimensions);
+            }, 5000);
+        });
+
+        var input = document.getElementById('options_4_file');
+        input.addEventListener('change', handleFiles);
+
+
+            //var dimensions = document.querySelector('.swatch-select');
+            //dimensions.addEventListener('change', handleDimensions);
+
+        function handleResize() {
+            var img = new Image;
+
+            if (!lastFile) {
+                return;
+            }
+            img.src = URL.createObjectURL(lastFile);
+            img.onload = function() {
+
+                var matches = $('.swatch-select option:selected').text().match(/(\d+)\s*x\s*(\d+)/);
+
+                def_width = def_height = 300;
+                if (matches && matches.length > 2) {
+                    def_width = matches[1] * 10;
+                    def_height = matches[2] * 10;
+                }
+
+                canvas = document.createElement("canvas");
+
+
+                //var base64String = crop(img, def_height / def_width); //HERE IS WHERE THE FUNCTION RESIZE IS CALLED!!!!
+                /** cropperjs **/
+
+                canvas.height = img.height;
+                canvas.width  = img.width
+                context = canvas.getContext('2d');
+                context.drawImage(img, 0, 0);
+                var base64String = canvas.toDataURL("image/png");//.replace("image/png", "image/octet-stream");
+                document.getElementsByClassName('fotorama__img')[0].src = base64String;
+                $('.fotorama__active').hide();
+                $('.fotorama__stage__shaft').prepend(canvas);
+                $('.gallery-placeholder').removeClass('gallery-placeholder').removeAttr('data-gallery-role');
+
+                //document.body.appendChild(canvas);
+                var cropper = new cropperjs(canvas,{
+                    aspectRatio: def_width / def_height
+                });
+                lastCrop = cropper;
+
+            }
+        }
+
+        function handleFiles(e) {
+            if (e.target.files) {
+                lastFile = e.target.files[0];
+            }
+            handleResize();
+        }
+
+        function handleDimensions(d) {
+            setTimeout(function () {
+                handleResize();
+            },400);
+        }
+
+        function resizeImg(img, maxWidth, maxHeight, degrees) {
+            var imgWidth = img.width,
+                imgHeight = img.height;
+
+            var ratio = 1,
+                ratio1 = 1,
+                ratio2 = 1;
+            ratio1 = maxWidth / imgWidth;
+            ratio2 = maxHeight / imgHeight;
+
+            // Use the smallest ratio that the image best fit into the maxWidth x maxHeight box.
+            if (ratio1 < ratio2) {
+                ratio = ratio1;
+            } else {
+                ratio = ratio2;
+            }
+
+            ratio = ratio1;
+            var canvas = document.createElement("canvas");
+            var canvasContext = canvas.getContext("2d");
+            var canvasCopy = document.createElement("canvas");
+            var copyContext = canvasCopy.getContext("2d");
+            var canvasCopy2 = document.createElement("canvas");
+            var copyContext2 = canvasCopy2.getContext("2d");
+            canvasCopy.width = imgWidth;
+            canvasCopy.height = imgHeight;
+            copyContext.drawImage(img, 0, 0);
+
+            // init
+            canvasCopy2.width = imgWidth;
+            canvasCopy2.height = imgHeight;
+            copyContext2.drawImage(canvasCopy, 0, 0, canvasCopy.width, canvasCopy.height, 0, 0, canvasCopy2.width, canvasCopy2.height);
+
+
+            var rounds = 1;
+            var roundRatio = ratio * rounds;
+            for (var i = 1; i <= rounds; i++) {
+
+
+                // tmp
+                canvasCopy.width = imgWidth * roundRatio / i;
+                canvasCopy.height = imgHeight * roundRatio / i;
+
+                copyContext.drawImage(canvasCopy2, 0, 0, canvasCopy2.width, canvasCopy2.height, 0, 0, canvasCopy.width, canvasCopy.height);
+
+                // copy back
+                canvasCopy2.width = imgWidth * roundRatio / i;
+                canvasCopy2.height = imgHeight * roundRatio / i;
+                copyContext2.drawImage(canvasCopy, 0, 0, canvasCopy.width, canvasCopy.height, 0, 0, canvasCopy2.width, canvasCopy2.height);
+
+            } // end for
+
+            canvas.width = imgWidth * roundRatio / rounds;
+            canvas.height = imgHeight * roundRatio / rounds;
+            canvasContext.drawImage(canvasCopy2, 0, 0, canvasCopy2.width, canvasCopy2.height, 0, 0, canvas.width, canvas.height);
+
+
+            if (degrees == 90 || degrees == 270) {
+                canvas.width = canvasCopy2.height;
+                canvas.height = canvasCopy2.width;
+            } else {
+                canvas.width = canvasCopy2.width;
+                canvas.height = canvasCopy2.height;
+            }
+
+            canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+            if (degrees == 90 || degrees == 270) {
+                canvasContext.translate(canvasCopy2.height / 2, canvasCopy2.width / 2);
+            } else {
+                canvasContext.translate(canvasCopy2.width / 2, canvasCopy2.height / 2);
+            }
+            canvasContext.rotate(degrees * Math.PI / 180);
+            canvasContext.drawImage(canvasCopy2, -canvasCopy2.width / 2, -canvasCopy2.height / 2);
+
+
+            var dataURL = canvas.toDataURL();
+            return dataURL;
+        }
+    });
+    // ]]>
+</script>
