@@ -116,4 +116,7 @@
             <argument name="pool" xsi:type="object">Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Pool</argument>
         </arguments>
     </type>
+    <type name="Magento\Quote\Model\Quote\Item">
+        <plugin name="yourcompany-yourmodule-product-model" type="VladFilimon\M2PrintService\Plugin\QuoteItemPlugin" sortOrder="1" />
+    </type>
 </config>

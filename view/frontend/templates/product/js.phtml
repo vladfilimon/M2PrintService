@@ -9,16 +9,14 @@
     ], function ($, dr, modal, cropperjs,addtocart) {
         let lastCrop;
         let canvas;
-        /*
-        let invertCheckox = document.createElement('INPUT');
-        invertCheckox.setAttribute("type", "checkbox");
-        $('.swatch-attribute .dimensiune').parent().append(invertCheckox);*/
-        // Hide cropped configurable option
-        $('#options_5_file-label').parent().hide();
 
+        $('#options_5_file-label').parent().hide();
         $('#product_addtocart_form').mage('validation', {
             radioCheckboxClosest: '.nested',
             submitHandler: function (form) {
+                if (!lastCrop) {
+                    return;
+                }
                 var blob;
                // var dataURL = document.getElementsByClassName('fotorama__img')[0].src;
                 var dataURL = lastCrop.getCroppedCanvas().toDataURL("image/png");
@@ -108,9 +106,15 @@
         function handleResize() {
             var img = new Image;
 
+
             if (!lastFile) {
                 return;
             }
+
+            if ($('.swatch-select option:selected').text().indexOf('*')) {
+                lastCrop = null;
+            }
+
             img.src = URL.createObjectURL(lastFile);
             img.onload = function() {
 
