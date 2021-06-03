@@ -46,4 +46,14 @@ class DefaultItem
 
         return $result;
     }
+
+    public function afterHasProductUrl($subject, $result)
+    {
+        return false;
+    }
+
+    public function afterGetRedirectUrl($subject, $result)
+    {
+        return false;
+    }
 }

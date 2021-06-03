@@ -16,4 +16,6 @@
     <type name="Magento\Checkout\CustomerData\DefaultItem">
         <plugin name="M2PrintService_MinicartDefaultItem" type="VladFilimon\M2PrintService\Plugin\Checkout\CustomerData\DefaultItem" sortOrder="1"/>
     </type>
+    <preference for="Magento\Checkout\CustomerData\DefaultItem"
+                type="VladFilimon\M2PrintService\CustomerData\DefaultItem" />
 </config>

@@ -93,6 +93,7 @@
         $(document).ready(function() {
             setTimeout(function () {
                 $('select[class="swatch-select dimensiune"]').change(handleDimensions);
+                $('#options_7_2').change(handleDimensions);
             }, 5000);
         });
 
@@ -124,16 +125,24 @@
                 if (matches && matches.length > 2) {
                     def_width = matches[1] * 10;
                     def_height = matches[2] * 10;
+                    if (document.getElementById('options_7_2').checked) { // invert
+                        def_width = matches[2] * 10;
+                        def_height = matches[1] * 10;
+                    }
+                } else {
+                    return false;
                 }
 
                 canvas = document.createElement("canvas");
+
 
 
                 //var base64String = crop(img, def_height / def_width); //HERE IS WHERE THE FUNCTION RESIZE IS CALLED!!!!
                 /** cropperjs **/
 
                 canvas.height = img.height;
-                canvas.width  = img.width
+                canvas.width  = img.width;
+
                 context = canvas.getContext('2d');
                 context.drawImage(img, 0, 0);
                 var base64String = canvas.toDataURL("image/png");//.replace("image/png", "image/octet-stream");

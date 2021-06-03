@@ -1,5 +1,16 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
+
+        <referenceBlock name="top.links">
+            <referenceBlock name="register-link" remove="true" />           <!--for Create Account Link-->
+            <referenceBlock name="authorization-link" remove="true" />      <!--for Sign In Link  -->
+            <referenceBlock name="wish-list-link" remove="true" />          <!--for WishList Link-->
+            <referenceBlock name="my-account-link" remove="true" />         <!--for My Account Link-->
+        </referenceBlock>
+
+        <referenceBlock name="header.links">
+            <referenceContainer name="authorization-link-login" remove="1"/>
+        </referenceBlock>
         <referenceBlock name="catalog.compare.sidebar" remove="true" />
         <referenceBlock name="category.product.addto.compare" remove="true"/>
         <referenceBlock name="catalogsearch.product.addto.compare" remove="true"/>
@@ -9,13 +20,77 @@
         <referenceContainer name="footer">
             <container name="cms_footer_links_container" label="CMS Footer Links" htmlTag="div" htmlClass="links" before="footer_links" />
         </referenceContainer>
+        <move element="contact-us-link" destination="footer_links" after="termeni-si-conditii"/>
         <referenceBlock name="footer_links">
+            <referenceBlock name="catalog-search-advanced-link" remove="true"/>
+            <!--<referenceBlock name="contact-us-link" remove="true"/>-->
+            <referenceBlock name="privacy-policy-link" remove="true"/>
+            <referenceBlock name="sales-guest-form-link" remove="true"/>
+            <referenceBlock name="search-term-popular-link" remove="true"/>
+
+            <block class="Magento\Framework\View\Element\Text" name="footer_links_title_despre" before="-">
+                <arguments>
+                    <argument translate="true" name="text" xsi:type="string">
+                        <![CDATA[<li><strong>Despre noi</strong></li>]]>
+                    </argument>
+                </arguments>
+            </block>
+            <block class="Magento\Framework\View\Element\Html\Link\Current" name="despre-noi">
+                <arguments>
+                    <argument name="label" xsi:type="string" translate="true">Despre noi</argument>
+                    <argument name="path" xsi:type="string">despre-noi</argument>
+                </arguments>
+            </block>
             <block class="Magento\Framework\View\Element\Html\Link\Current" name="termeni-si-conditii">
                 <arguments>
                     <argument name="label" xsi:type="string" translate="true">Termeni si conditii</argument>
                     <argument name="path" xsi:type="string">termeni-si-conditii</argument>
                 </arguments>
             </block>
+            <block class="Magento\Framework\View\Element\Html\Link\Current" name="anpc">
+                <arguments>
+                    <argument name="label" xsi:type="string" translate="true">ANPC</argument>
+                    <argument name="path" xsi:type="string">https://anpc.ro/</argument>
+                </arguments>
+            </block>
+            <block class="Magento\Framework\View\Element\Text" name="footer_links_title_livrare" after="anpc">
+                <arguments>
+                    <argument translate="true" name="text" xsi:type="string">
+                        <![CDATA[</ul><ul class="footer links"><li><strong>Livrare si Retur</strong></li>]]>
+                    </argument>
+                </arguments>
+            </block>
+            <block class="Magento\Framework\View\Element\Html\Link\Current">
+                <arguments>
+                    <argument name="label" xsi:type="string" translate="true">Informatii livrare</argument>
+                    <argument name="path" xsi:type="string">termeni-si-conditii</argument>
+                </arguments>
+            </block>
+            <block class="Magento\Framework\View\Element\Html\Link\Current">
+                <arguments>
+                    <argument name="label" xsi:type="string" translate="true">Politica retur</argument>
+                    <argument name="path" xsi:type="string">politica-retur</argument>
+                </arguments>
+            </block>
+            <block class="Magento\Framework\View\Element\Text" name="footer_links_title_relatii">
+                <arguments>
+                    <argument translate="true" name="text" xsi:type="string">
+                        <![CDATA[</ul><ul class="footer links"><li><strong>Relatii clienti</strong></li>]]>
+                    </argument>
+                </arguments>
+            </block>
+            <block class="Magento\Framework\View\Element\Text" name="footer_links_title_end" after="footer_links_title_relatii">
+                <arguments>
+                    <argument translate="true" name="text" xsi:type="string">
+                        <![CDATA[<li>Program Luni — Vineri · 10:00 - 18:00<br/>
+Telefon <a href="tel:+40729876773">+40 729 87 67 73</a><br/>
+E-mail <a href="mailto:contact@atelieruldetablouri.ro">contact@atelieruldetablouri.ro</a>
+</li>]]>
+                    </argument>
+                </arguments>
+            </block>
         </referenceBlock>
+        <referenceBlock name="customer_form_login" remove="true"/>
+        <referenceBlock name="authentication-popup" remove="true"/>
     </body>
 </page>
