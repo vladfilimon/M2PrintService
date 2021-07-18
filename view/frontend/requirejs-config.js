@@ -6,6 +6,9 @@ var config = {
             },
             'Magento_Swatches/js/swatch-renderer': {
                 'VladFilimon_M2PrintService/js/swatch-renderer-mixin': true
+            },
+            'Magento_Catalog/js/gallery': {
+                'VladFilimon_M2PrintService/js/gallery-mixin': true
             }
         }
     },

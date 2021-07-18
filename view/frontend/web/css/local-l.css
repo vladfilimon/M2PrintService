@@ -7,3 +7,6 @@
     padding: 0;
     list-style: none none;
 }
+
+div[name="billingAddresscheckmo.country_id"] { display: none; }
+div[name="billingAddresscheckmo.company"] { display: none; }

@@ -1,0 +1,7 @@
+._block-content-loading {
+    /*position: absolute !important;*/
+}
+
+option:disabled {
+    color: #E8E8E8;
+}

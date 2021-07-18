@@ -15,6 +15,7 @@
         <referenceBlock name="category.product.addto.compare" remove="true"/>
         <referenceBlock name="catalogsearch.product.addto.compare" remove="true"/>
         <referenceBlock name="view.addto.compare" remove="true" />
+        <referenceBlock name="view.addto.wishlist" remove="true" />
         <referenceBlock name="related.product.addto.compare" remove="true" />
         <referenceBlock name="wishlist_sidebar" remove="true" />
         <referenceContainer name="footer">
@@ -31,7 +32,7 @@
             <block class="Magento\Framework\View\Element\Text" name="footer_links_title_despre" before="-">
                 <arguments>
                     <argument translate="true" name="text" xsi:type="string">
-                        <![CDATA[<li><strong>Despre noi</strong></li>]]>
+                        <![CDATA[<li><h3>Despre noi</h3></li>]]>
                     </argument>
                 </arguments>
             </block>
@@ -56,7 +57,7 @@
             <block class="Magento\Framework\View\Element\Text" name="footer_links_title_livrare" after="anpc">
                 <arguments>
                     <argument translate="true" name="text" xsi:type="string">
-                        <![CDATA[</ul><ul class="footer links"><li><strong>Livrare si Retur</strong></li>]]>
+                        <![CDATA[</ul><ul class="footer links"><li><h3>Livrare si Retur</h3></li>]]>
                     </argument>
                 </arguments>
             </block>
@@ -75,7 +76,7 @@
             <block class="Magento\Framework\View\Element\Text" name="footer_links_title_relatii">
                 <arguments>
                     <argument translate="true" name="text" xsi:type="string">
-                        <![CDATA[</ul><ul class="footer links"><li><strong>Relatii clienti</strong></li>]]>
+                        <![CDATA[</ul><ul class="footer links"><li><h3>Relatii clienti</h3></li>]]>
                     </argument>
                 </arguments>
             </block>

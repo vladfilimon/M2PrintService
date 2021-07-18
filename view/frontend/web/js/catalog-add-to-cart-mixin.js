@@ -6,8 +6,6 @@ define([
     'jquery/ui'
 ], function($, $t) {
     "use strict";
-    console.log($.mage.catalogAddToCart);
-    alert("OK1");
     $.widget('VladFilimon_M2PrintService.catalogAddToCart',$.mage.catalogAddToCart, {
         //Override function
 

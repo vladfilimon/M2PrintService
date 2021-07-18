@@ -1,0 +1,38 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/**
+ * Product media data template
+ *
+ * @var $block \Magento\Catalog\Block\Product\View\Gallery
+ */
+?>
+
+<?php
+$images = $block->getGalleryImages()->getItems();
+$mainImage = current(array_filter($images, function ($img) use ($block) {
+    return $block->isMainImage($img);
+}));
+
+if (!empty($images) && empty($mainImage)) {
+    $mainImage = $block->getGalleryImages()->getFirstItem();
+}
+
+$helper = $block->getData('imageHelper');
+$mainImageData = $mainImage ?
+    $mainImage->getData('medium_image_url') :
+    $helper->getDefaultPlaceholderUrl('image');
+
+?>
+
+<div class="gallery-placeholder _block-content-loading" data-gallery-role="gallery-placeholder" style="width: 707px;height: 707px;">
+    <img
+        alt="main product photo"
+        class="m2printservice_image"
+        src="<?= /* @noEscape */ $mainImageData ?>"
+    />
+    <div class="m2printservice_crop_placeholder"></div>
+</div>

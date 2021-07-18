@@ -1,5 +1,18 @@
 <page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <move element="product.attributes" destination="product.info.main" after="-"/>
+        <!--
+        <referenceContainer name="product.info.media.image" remove="true"/>
+        <referenceContainer name="skip_gallery_after.target" remove="true"/>
+        <referenceContainer name="skip_gallery_before.wrapper" remove="true"/>
+        <referenceContainer name="skip_gallery_after.wrapper" remove="true"/>
+        <referenceContainer name="skip_gallery_before.target" remove="true"/>
+        <block class="Magento\Catalog\Block\Product\View\Gallery" name="product.info.media.image" template="VladFilimon_M2PrintService::product/view/gallery.phtml">
+            <arguments>
+                <argument name="gallery_options" xsi:type="object">Magento\Catalog\Block\Product\View\GalleryOptions</argument>
+                <argument name="imageHelper" xsi:type="object">Magento\Catalog\Helper\Image</argument>
+            </arguments>
+        </block>
+        -->
     </body>
 </page>

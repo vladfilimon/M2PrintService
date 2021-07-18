@@ -5,7 +5,7 @@
         <sequence>
             <module name="Magento_Ui"/>
             <module name="Magento_ConfigurableProduct"/>
-
+            <module name="Magento_Catalog"/>
         </sequence>
     </module>
 </config>

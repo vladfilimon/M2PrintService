@@ -4,3 +4,26 @@
     display: block;
 }
 */
+
+.footer ul li {
+    border-top: none !important;
+}
+
+
+ul.footer.links > li:nth-child(1) {
+    border-bottom: 1px solid #cecece !important;
+}
+ul.footer.links h3 {
+    margin-top:0px;
+    margin-bottom: 0px;
+    padding-top: 2rem;
+    padding-bottom: 1rem;
+}
+
+.nav-sections-item-content {
+    margin-top: 0 !important;
+}
+
+.nav-sections-it, .nav-sections-item-title {
+    display: none !important;
+}

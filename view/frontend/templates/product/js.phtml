@@ -146,14 +146,17 @@
                 context = canvas.getContext('2d');
                 context.drawImage(img, 0, 0);
                 var base64String = canvas.toDataURL("image/png");//.replace("image/png", "image/octet-stream");
-                document.getElementsByClassName('fotorama__img')[0].src = base64String;
-                $('.fotorama__active').hide();
-                $('.fotorama__stage__shaft').prepend(canvas);
-                $('.gallery-placeholder').removeClass('gallery-placeholder').removeAttr('data-gallery-role');
+                document.getElementsByClassName('m2printservice_image')[0].src = base64String;
+                $('.m2printservice_image').hide();
+                $('.m2printservice_crop_placeholder').empty();
+                $('.m2printservice_crop_placeholder').prepend(canvas);
+                //$('.gallery-placeholder').removeClass('gallery-placeholder').removeAttr('data-gallery-role');
 
                 //document.body.appendChild(canvas);
                 var cropper = new cropperjs(canvas,{
-                    aspectRatio: def_width / def_height
+                    aspectRatio: def_width / def_height,
+                    viewMode: 3,
+                    autoCropArea: 1
                 });
                 lastCrop = cropper;
 
