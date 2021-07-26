@@ -13,9 +13,11 @@ var config = {
         }
     },
     paths: {
-        'cropperjs' : ['//unpkg.com/cropperjs@latest/dist/cropper', 'VladFilimon_M2PrintService/cropper']
+        'cropperjs' : ['//unpkg.com/cropperjs@latest/dist/cropper'],
+        'owlcarousel' : ['//unpkg.com/owl.carousel@latest/dist/owl.carousel'],
     },
     shim: {
-        'cropperjs' : ['jquery']
+        'cropperjs' : ['jquery'],
+        'owlcarousel' : ['jquery'],
     },
 };

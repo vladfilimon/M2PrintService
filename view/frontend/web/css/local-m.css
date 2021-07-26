@@ -27,3 +27,49 @@ ul.footer.links h3 {
 .nav-sections-it, .nav-sections-item-title {
     display: none !important;
 }
+
+.header.panel > .header.links {
+    float:none !important;
+    font-size: inherit;
+    display: block !important;
+}
+.page-header .panel.wrapper {
+    position: fixed;
+    width: 100%;
+    z-index:5;
+}
+
+.header.content {
+    margin-top: 50px;
+}
+
+
+.testimonial {
+    position:relative;
+    padding: 45px 15px 15px 45px;
+    background: #f1f1f1 !important;
+    border: 1px solid #efefef;
+    border-radius: 3px !important;
+    margin-bottom: 15px;
+    min-height: 90px;
+    overflow: hidden;
+    border-radius: 18px;
+}
+
+.tesimonial_author {
+    position:absolute;
+    right:80px;
+    bottom:10px;
+    text-align:right;
+}
+
+.testimonial:before {
+    content: '\201C';
+    color: #81bedb;
+    font-size: 7.5em;
+    opacity: .3;
+    position:absolute;
+    top:-20px;
+    left:10pxs;
+    font-family: Georgia, serif;
+}

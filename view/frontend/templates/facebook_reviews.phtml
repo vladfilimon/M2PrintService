@@ -1,0 +1,31 @@
+<?php $reviews = $this->getReviews();
+?>
+<div class="testimonial_wrapper">
+    <h3>Ce spun clienții noștri ?</h3>
+    Citește câteva dintre recenziile clienților noștri și convinge-te de ce merită să ne alegi.
+    Pentru mai multe review-uri, te invităm pe paginile noastre cu recenzii de pe Facebook sau Google.
+    <div id="testimonail_carousel">
+    <?php foreach ($reviews as $review):?>
+    <div class="testimonial">
+        <div>
+            <?php echo $review['review_text']; ?>
+        </div>
+        <div class="tesimonial_author">
+            Client AtelierulDeTablouri.ro
+        </div>
+    </div>
+    <?php endforeach;?>
+    </div>
+</div>
+
+<script type="text/x-magento-init">
+     {
+         "#testimonail_carousel": {
+             "slick": {
+
+                "autoplay"          :   true
+
+             }
+         }
+     }
+ </script>
