@@ -7,7 +7,7 @@ use Magento\Framework\View\Element\Template\Context;
 
 class FacebookReviews extends \Magento\Framework\View\Element\Template
 {
-    protected Curl $curl;
+    protected $curl;
 
     /**
      * Constructor
@@ -23,11 +23,19 @@ class FacebookReviews extends \Magento\Framework\View\Element\Template
 
     public function getReviews()
     {
+        $toReturn = false;
+        try
+        {
+            $apiUrl = 'https://graph.facebook.com/v11.0/atelieruldetablouri.ro/ratings?access_token=EAALuwL3zoRsBALWxQEVCQJFWZBBN3ijKovhavppdrjRfFlHbBhWAsGj7YbLaL42BEuuwYdZAXIc4CmOIioLN1HTo3RBLvEPHouTDDN0VkIljZBPPZBNhm5KY66cH9Jx5cvsAl1ElIDMDminC82ZCaNxM6h6WezBAZBPHWLZAynvTPnfQZBtZAGxoqLmOPjmDm3NQZD';
+            $this->curl->get($apiUrl);
+            $response = json_decode($this->curl->getBody(), true);
+            $toReturn = $response['data'];
+        }
+        catch (\Exception $e) {
+            //log
+        }
 
-        $apiUrl = 'https://graph.facebook.com/v11.0/atelieruldetablouri.ro/ratings?access_token=EAALuwL3zoRsBALWxQEVCQJFWZBBN3ijKovhavppdrjRfFlHbBhWAsGj7YbLaL42BEuuwYdZAXIc4CmOIioLN1HTo3RBLvEPHouTDDN0VkIljZBPPZBNhm5KY66cH9Jx5cvsAl1ElIDMDminC82ZCaNxM6h6WezBAZBPHWLZAynvTPnfQZBtZAGxoqLmOPjmDm3NQZD';
-        $this->curl->get($apiUrl);
-        $response = json_decode($this->curl->getBody(), true);
-        return $response['data'];
+        return $toReturn;
 
     }
 }
